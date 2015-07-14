@@ -1,0 +1,28 @@
+The data format of the measured and simulated data is as follows:
+
+timeSignals:
+measured downsampled time signals as a cell array with one entry per cycle. Every entry contains a (ramps x channels)-cell containing the temporal values as an array. Cells are used, as every ramp can be sampled differently with a different number of samples. If the radar contains IQ-mixer the values are complex, otherwise the values are real. 
+
+time:
+array containing the end of every cycle when the last ramp of each cycle is received.
+
+modulation:
+The ramps are defined by the variable modulation, which is an array of structs. Each struct contains vectors of length ramps with the slope, the duration, the number of samples, the relative time and the absolute frequency in the middle of the ramps.
+Sometimes the variable cycleTime, which is the length of one cycle is included in modulation as well.
+
+angs:
+angles in radians, at which the sensor array has been measured. This variable does not depend on time.
+
+steeringVectors:
+every column in variable steeringVectors is one measurement of the sensor array for the coressponding angle in variable angs. This variable does not depend on time. Dimension: numberOfRxChannels x length(angs)
+
+for measured data
+-----------------
+ego:
+ego is an array of structs. For every measured point in time there is one struct containing the ego velocity in m/s and the ego angular velocity in rad/s, which is available on the CAN bus of the car. To improve the quality of the tracking algorithm, the ego car data may be used, although the ego data is estimatable by the radar as well and the estimated data can sometimes be of higher quality than the data sent on CAN. 
+
+simulated data
+--------------
+reference:
+For simulated sensor data, the reference is given in the variable "reference", which is an array of structs. It contains the absolute position and velocity of the ego car as vectors. The standard automotive coordinate system is used (ISO 8855, DIN 70000) with the first coordinate (x) in driving direction when the car drives to the right and the second coordinate (y) points to the left of the car (upwards in the example). Note, that in the simulations, the car drives into the direction it is oriented to at all times. Thus, the car's direction can be extracted from the velocity vector. The positions of the other objects is given in the field "objects" of struct "reference".
+
